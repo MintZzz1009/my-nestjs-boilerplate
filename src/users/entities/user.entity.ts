@@ -6,8 +6,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { EntityHelper } from 'src/utils/entity-helper';
+import { Role } from 'src/roles/entities/role.entity';
+import { FileEntity } from 'src/files/entities/file.entity';
 
 @Entity()
 export class User extends EntityHelper {
@@ -35,9 +38,15 @@ export class User extends EntityHelper {
   @Column({ type: String, nullable: true })
   lastName: string | null;
 
+  @ManyToOne(() => FileEntity, {
+    eager: true,
+  })
   photo?: object; // FileEntity | null;
 
-  role?: object; // Role | null;
+  @ManyToOne(() => Role, {
+    eager: true,
+  })
+  role?: Role | null;
 
   status?: object; // Status;
 

@@ -1,6 +1,12 @@
 import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
+import { FileEntity } from 'src/files/entities/file.entity';
+import { Role } from 'src/roles/entities/role.entity';
+import { Status } from 'src/statuses/entities/status.entity';
+import { Transform } from 'class-transformer';
+import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 
 export class CreateUserDto {
+  @Transform(lowerCaseTransformer)
   @IsNotEmpty()
   @IsEmail()
   email: string | null;
@@ -19,11 +25,11 @@ export class CreateUserDto {
   lastName: string | null;
 
   @IsOptional()
-  photo?: object; // FileEntity | null;
+  photo?: FileEntity | null;
 
-  role?: object; // Role | null;
+  role?: Role | null;
 
-  status?: object; // Status;
+  status?: Status;
 
   hash?: string | null;
 }
