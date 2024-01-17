@@ -1,20 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { DatabaseConfig } from './config/database-config.type';
-import { AppConfig } from 'src/config/app-config.type';
-
-type AllConfigType = {
-  app: AppConfig;
-  database: DatabaseConfig;
-};
+import { AllConfigType } from 'src/config/config.type';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService<AllConfigType>) {}
 
-  // TypeOrm을 AppModule에 등록하기 위해서 TypeOrmConfigService의 옵션값을 설정.
-  // 옵션값 설정을 위해서 ConfigService 사용
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       type: this.configService.get('database.type', { infer: true }),

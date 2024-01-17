@@ -37,8 +37,6 @@ export class UsersService {
       }));
     }
 
-    console.log(typeof sortOptions);
-
     return this.usersRepository.find({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,

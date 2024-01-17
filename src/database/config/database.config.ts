@@ -1,8 +1,80 @@
 import { registerAs } from '@nestjs/config';
 import { DatabaseConfig } from 'src/database/config/database-config.type';
+import {
+  IsOptional,
+  IsInt,
+  Min,
+  Max,
+  IsString,
+  ValidateIf,
+  IsBoolean,
+} from 'class-validator';
+import validateConfig from 'src/utils/validate-config';
+
+class EnvironmentVariablesValidator {
+  @ValidateIf((envValues) => envValues.DATABASE_URL)
+  @IsString()
+  DATABASE_URL: string;
+
+  @ValidateIf((envValues) => !envValues.DATABASE_URL)
+  @IsString()
+  DATABASE_TYPE: string;
+
+  @ValidateIf((envValues) => !envValues.DATABASE_URL)
+  @IsString()
+  DATABASE_HOST: string;
+
+  @ValidateIf((envValues) => !envValues.DATABASE_URL)
+  @IsInt()
+  @Min(0)
+  @Max(65535)
+  @IsOptional()
+  DATABASE_PORT: number;
+
+  @ValidateIf((envValues) => !envValues.DATABASE_URL)
+  @IsString()
+  @IsOptional()
+  DATABASE_PASSWORD: string;
+
+  @ValidateIf((envValues) => !envValues.DATABASE_URL)
+  @IsString()
+  DATABASE_NAME: string;
+
+  @ValidateIf((envValues) => !envValues.DATABASE_URL)
+  @IsString()
+  DATABASE_USERNAME: string;
+
+  @IsBoolean()
+  @IsOptional()
+  DATABASE_SYNCHRONIZE: boolean;
+
+  @IsInt()
+  @IsOptional()
+  DATABASE_MAX_CONNECTIONS: number;
+
+  @IsBoolean()
+  @IsOptional()
+  DATABASE_SSL_ENABLED: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  DATABASE_REJECT_UNAUTHORIZED: boolean;
+
+  @IsString()
+  @IsOptional()
+  DATABASE_CA: string;
+
+  @IsString()
+  @IsOptional()
+  DATABASE_KEY: string;
+
+  @IsString()
+  @IsOptional()
+  DATABASE_CERT: string;
+}
 
 export default registerAs<DatabaseConfig>('database', () => {
-  // validateConfig(process.env, EnvironmentVariablesValidator);
+  validateConfig(process.env, EnvironmentVariablesValidator);
 
   return {
     url: process.env.DATABASE_URL,
@@ -25,5 +97,3 @@ export default registerAs<DatabaseConfig>('database', () => {
     cert: process.env.DATABASE_CERT,
   };
 });
-
-// .env 파일의 DATABASE_URL 변수의 값을 ConfigService.get('database.url')로 불러올 수 있도록 등록
